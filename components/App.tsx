@@ -1,14 +1,17 @@
+
 import React, { useState, useEffect } from 'react';
 import { generateBlueprint } from '../services/geminiService';
 import { InputSection } from './InputSection';
 import { BlueprintDisplay } from './BlueprintDisplay';
 import { ProjectBlueprint, AppState, ProjectTemplate } from '../types/index';
-import { Github, Languages, LogOut, Settings2, Key, Moon, Sun } from 'lucide-react';
+// Added missing Key icon to the lucide-react import list
+import { Github, Settings, LogOut, Moon, Sun, Key } from 'lucide-react';
 import { Logo } from './Logo';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { AuthModal } from './AuthModal';
+import { SettingsModal } from './SettingsModal';
 import { ErrorBoundary } from './ErrorBoundary';
 import { LoadingOverlay } from './LoadingOverlay';
 
@@ -17,11 +20,11 @@ export default function App() {
   const [blueprint, setBlueprint] = useState<ProjectBlueprint | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
   const [hasApiKey, setHasApiKey] = useState<boolean>(false);
 
-  const { t, language, setLanguage } = useLanguage();
+  const { t, language } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, logout } = useAuth();
 
@@ -56,13 +59,12 @@ export default function App() {
       return;
     }
 
-    // gemini-3-pro-preview requires a user-selected API key
     const aistudio = (window as any).aistudio;
     if (!hasApiKey && aistudio) {
       const isKeySelected = await aistudio.hasSelectedApiKey();
       if (!isKeySelected) {
-        await handleSelectKey();
-        // The above call opens a dialog, we proceed assuming user will pick a key
+        setIsSettingsOpen(true); // Open settings to prompt for key
+        return;
       } else {
         setHasApiKey(true);
       }
@@ -78,7 +80,8 @@ export default function App() {
       setAppState(AppState.ERROR);
       if (err.message?.includes("Requested entity was not found.")) {
         setError("API Key Error: Please ensure you have selected a valid API key from a paid GCP project.");
-        setHasApiKey(false); // Force re-selection
+        setHasApiKey(false);
+        setIsSettingsOpen(true);
       } else {
         setError(t('generationFailed'));
       }
@@ -91,14 +94,19 @@ export default function App() {
     setError(null);
   };
 
-  const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'bn' : 'en');
-  };
-
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300 selection:bg-primary/30 selection:text-primary-100 flex flex-col font-sans">
       <ErrorBoundary name="Auth Layer">
         <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      </ErrorBoundary>
+
+      <ErrorBoundary name="Settings Layer">
+        <SettingsModal 
+          isOpen={isSettingsOpen} 
+          onClose={() => setIsSettingsOpen(false)} 
+          hasApiKey={hasApiKey}
+          onSelectKey={handleSelectKey}
+        />
       </ErrorBoundary>
       
       <LoadingOverlay isVisible={appState === AppState.GENERATING} />
@@ -116,39 +124,11 @@ export default function App() {
 
           <div className="flex items-center space-x-3">
             <button 
-              onClick={toggleTheme}
-              className="p-2 rounded-full bg-surface hover:bg-surface/80 text-gray-500 hover:text-primary border border-border transition-all"
-              title={theme === 'dark' ? t('lightMode') : t('darkMode')}
+              onClick={() => setIsSettingsOpen(true)}
+              className={`p-2 rounded-full transition-all duration-300 ${!hasApiKey && isAuthenticated ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30 animate-pulse' : 'bg-surface text-gray-500 hover:text-primary border-border'} border`}
+              title="Workspace Settings"
             >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-
-            {isAuthenticated && (
-              <button 
-                onClick={handleSelectKey}
-                className={`p-2 rounded-full transition-all duration-300 ${hasApiKey ? 'bg-green-500/10 text-green-500 border-green-500/30' : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30'} border`}
-                title="Select API Key"
-              >
-                <Key size={18} />
-              </button>
-            )}
-
-            {isAuthenticated && (
-              <button 
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                className={`p-2 rounded-full transition-all duration-300 ${showAdvanced ? 'bg-primary/20 text-primary border-primary/50 ring-1 ring-primary' : 'bg-surface text-gray-500 hover:text-foreground border-border'} border`}
-                title="Advanced Settings"
-              >
-                <Settings2 size={18} />
-              </button>
-            )}
-
-            <button 
-              onClick={toggleLanguage}
-              className="flex items-center space-x-2 px-4 py-1.5 rounded-full bg-surface hover:bg-surface/80 border border-border transition-all text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest"
-            >
-              <Languages size={14} className="text-primary" />
-              <span>{language}</span>
+              <Settings size={18} />
             </button>
 
             {isAuthenticated ? (
@@ -208,21 +188,20 @@ export default function App() {
         <ErrorBoundary name="App Workspace">
           {!hasApiKey && isAuthenticated ? (
              <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center animate-fade-in">
-               <div className="bg-surface p-12 rounded-3xl border border-border shadow-2xl max-w-lg">
+               <div className="bg-surface p-12 rounded-[3rem] border border-border shadow-2xl max-w-lg">
                   <Key size={48} className="text-primary mb-6 mx-auto animate-bounce" />
-                  <h2 className="text-2xl font-bold mb-4">API Key Required</h2>
+                  <h2 className="text-2xl font-bold mb-4">API Configuration Needed</h2>
                   <p className="text-gray-500 dark:text-gray-400 text-sm mb-8 leading-relaxed">
-                    To use the high-fidelity <strong>Gemini 3 Pro</strong> model for code generation, 
-                    you must select an API key from a paid Google Cloud project.
+                    To start building apps with <strong>Gemini 3 Pro</strong>, you must configure your API key in the Workspace Settings.
                   </p>
                   <button 
-                    onClick={handleSelectKey}
-                    className="w-full py-4 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold transition-all shadow-lg shadow-primary/30"
+                    onClick={() => setIsSettingsOpen(true)}
+                    className="w-full py-4 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold transition-all shadow-lg shadow-primary/30"
                   >
-                    Select API Key
+                    Open Settings
                   </button>
                   <p className="mt-6 text-[10px] text-gray-500">
-                    Visit the <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Billing Documentation</a> for more information.
+                    Paid tier project required. <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Billing Docs</a>
                   </p>
                </div>
              </div>
@@ -232,7 +211,7 @@ export default function App() {
                 <InputSection 
                   onGenerate={handleGenerate} 
                   isGenerating={appState === AppState.GENERATING} 
-                  showAdvanced={showAdvanced} 
+                  showAdvanced={false} 
                 />
               )}
 

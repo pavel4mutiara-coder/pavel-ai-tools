@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { ProjectBlueprint, ProjectTemplate } from "../types/index";
 
@@ -69,6 +70,27 @@ const projectSchema = {
     }
   },
   required: ["projectName", "tagline", "description", "techStack", "features", "fileStructure", "estimatedDuration"]
+};
+
+/**
+ * Tests the current API Key by making a minimal request.
+ */
+export const testApiKey = async (): Promise<boolean> => {
+  try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: "Connection Test: Respond with 'OK' if active.",
+      config: {
+        maxOutputTokens: 5,
+        thinkingConfig: { thinkingBudget: 0 }
+      }
+    });
+    return response.text?.includes("OK") || false;
+  } catch (error) {
+    console.error("API Connection Test Failed:", error);
+    throw error;
+  }
 };
 
 /**

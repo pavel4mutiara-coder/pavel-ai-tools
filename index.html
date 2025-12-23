@@ -1,14 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pavel AI Workspace - Intelligent Project Scaffolding</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>Pavel AI Workspace - Build Apps Instantly</title>
+    <meta name="title" content="Pavel AI Workspace - Intelligent Project Scaffolding" />
+    <meta name="description" content="An intelligent software architect that transforms ideas into production-ready React blueprints using Gemini 3 Pro." />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Pavel AI Workspace" />
+    <meta property="og:description" content="Generate full-stack React MVPs in seconds with AI-powered file structuring." />
+    <meta property="og:image" content="https://pavel-ai.vercel.app/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Pavel AI Workspace" />
+    <meta property="twitter:description" content="Intelligent Project Scaffolding with Gemini API." />
+
     <!-- Generated SVG Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='100' y2='100'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3Cg transform='translate(0, 2)'%3E%3Cpath d='M50 28 L28 72 H72 L50 28' stroke='white' stroke-width='6' stroke-linejoin='round' stroke-linecap='round' fill='none' opacity='0.9'/%3E%3Ccircle cx='50' cy='28' r='7' fill='white'/%3E%3Ccircle cx='28' cy='72' r='7' fill='white'/%3E%3Ccircle cx='72' cy='72' r='7' fill='white'/%3E%3Ccircle cx='50' cy='54' r='5' fill='white' opacity='0.4'/%3E%3C/g%3E%3C/svg%3E" />
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -59,9 +77,10 @@
         background-color: var(--background);
         color: var(--foreground);
         transition: background-color 0.3s ease, color 0.3s ease;
+        margin: 0;
+        overflow-x: hidden;
       }
       
-      /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -76,20 +95,48 @@
       ::-webkit-scrollbar-thumb:hover {
         background: var(--scrollbar-thumb-hover); 
       }
+
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      /* Global Animations */
+      @keyframes progress-indeterminate {
+        0% { transform: translateX(-100%); }
+        50% { transform: translateX(0%); }
+        100% { transform: translateX(100%); }
+      }
+      .animate-progress-indeterminate {
+        animation: progress-indeterminate 1.5s infinite linear;
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
     </style>
-  <script type="importmap">
+    <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "react": "https://esm.sh/react@19.2.3",
+    "react-dom": "https://esm.sh/react-dom@19.2.3",
+    "react-dom/client": "https://esm.sh/react-dom@19.2.3/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.561.0",
+    "@google/genai": "https://esm.sh/@google/genai@1.33.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.33.0"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "path": "https://esm.sh/path@^0.12.7",
+    "url": "https://esm.sh/url@^0.11.4"
   }
 }
 </script>
-</head>
+  </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
