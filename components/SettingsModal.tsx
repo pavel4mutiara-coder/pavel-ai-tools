@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { 
   X, Key, Shield, CheckCircle2, AlertCircle, 
   ExternalLink, Globe, Moon, Sun, Monitor, 
-  Zap, Info, RefreshCcw, Loader2 
+  Zap, Info, RefreshCcw, Loader2, Trash2, PlusCircle, ShieldCheck
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -14,9 +14,10 @@ interface SettingsModalProps {
   onClose: () => void;
   hasApiKey: boolean;
   onSelectKey: () => Promise<void>;
+  onResetKey: () => void;
 }
 
-export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, hasApiKey, onSelectKey }) => {
+export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, hasApiKey, onSelectKey, onResetKey }) => {
   const { t, language, setLanguage } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   
@@ -72,8 +73,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
               onClick={() => setActiveTab('api')}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${activeTab === 'api' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-500 hover:bg-surface hover:text-foreground'}`}
             >
-              <Shield size={16} />
-              <span>API Safety</span>
+              <ShieldCheck size={16} />
+              <span>Key Manager</span>
             </button>
             <button 
               onClick={() => setActiveTab('general')}
@@ -88,83 +89,111 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
           <main className="flex-1 overflow-y-auto p-8 custom-scrollbar">
             {activeTab === 'api' ? (
               <div className="space-y-8 animate-fade-in">
-                {/* Status Card */}
-                <div className={`p-6 rounded-3xl border ${hasApiKey ? 'bg-green-500/5 border-green-500/20' : 'bg-yellow-500/5 border-yellow-500/20'} transition-colors`}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      {hasApiKey ? (
-                        <CheckCircle2 size={24} className="text-green-500" />
-                      ) : (
-                        <AlertCircle size={24} className="text-yellow-500" />
-                      )}
-                      <div>
-                        <h3 className="font-bold text-foreground">API Status</h3>
-                        <p className="text-xs text-gray-500">{hasApiKey ? 'Key Selected & Active' : 'No Key Detected'}</p>
-                      </div>
-                    </div>
+                {/* Manager Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-foreground">API Management</h3>
                     {hasApiKey && (
-                      <span className="px-2 py-1 bg-green-500/20 text-green-500 text-[9px] font-black uppercase rounded-md animate-pulse">Live</span>
+                      <span className="flex items-center space-x-1 px-2 py-0.5 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full border border-green-500/20">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                        <span>Authenticated</span>
+                      </span>
                     )}
                   </div>
                   
-                  <p className="text-xs text-gray-500 leading-relaxed mb-6">
-                    A paid Google Cloud project API key is required to utilize <strong>Gemini 3 Pro</strong>. 
-                    Your key is stored securely in the browser session.
-                  </p>
+                  {/* Status Indicator Card */}
+                  <div className={`p-6 rounded-3xl border ${hasApiKey ? 'bg-primary/5 border-primary/20' : 'bg-yellow-500/5 border-yellow-500/20'} transition-all`}>
+                    <div className="flex flex-col items-center text-center space-y-4">
+                      <div className={`p-4 rounded-full ${hasApiKey ? 'bg-primary/10 text-primary' : 'bg-yellow-500/10 text-yellow-500'}`}>
+                        {hasApiKey ? <Shield size={32} /> : <AlertCircle size={32} />}
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-bold">
+                          {hasApiKey ? 'Primary Key Active' : 'No Active Key Configured'}
+                        </p>
+                        <p className="text-[11px] text-gray-500 mt-1">
+                          {hasApiKey 
+                            ? 'Your session is encrypted and authenticated with Google AI Studio.' 
+                            : 'Connect your API key to enable high-fidelity code generation with Gemini 3 Pro.'}
+                        </p>
+                      </div>
 
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <button 
-                      onClick={onSelectKey}
-                      className="flex-1 flex items-center justify-center space-x-2 py-3 bg-foreground dark:bg-white dark:text-black text-white rounded-2xl text-xs font-bold hover:opacity-90 transition-all shadow-xl"
-                    >
-                      <Key size={14} />
-                      <span>{hasApiKey ? 'Change Key' : 'Select Key'}</span>
-                    </button>
-                    <button 
-                      onClick={handleTestKey}
-                      disabled={!hasApiKey || testStatus === 'testing'}
-                      className="flex-1 flex items-center justify-center space-x-2 py-3 bg-surface border border-border rounded-2xl text-xs font-bold hover:bg-background transition-all disabled:opacity-50"
-                    >
-                      {testStatus === 'testing' ? <Loader2 size={14} className="animate-spin" /> : <RefreshCcw size={14} />}
-                      <span>Test Connection</span>
-                    </button>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full pt-2">
+                        {!hasApiKey ? (
+                          <button 
+                            onClick={onSelectKey}
+                            className="w-full flex items-center justify-center space-x-2 py-3 bg-primary text-white rounded-2xl text-xs font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+                          >
+                            <PlusCircle size={14} />
+                            <span>Add API Key</span>
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={onSelectKey}
+                            className="w-full flex items-center justify-center space-x-2 py-3 bg-surface border border-border rounded-2xl text-xs font-bold hover:bg-background transition-all"
+                          >
+                            <RefreshCcw size={14} />
+                            <span>Change Key</span>
+                          </button>
+                        )}
+                        
+                        {hasApiKey && (
+                          <button 
+                            onClick={() => {
+                              onResetKey();
+                              setTestStatus('idle');
+                            }}
+                            className="w-full flex items-center justify-center space-x-2 py-3 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl text-xs font-bold hover:bg-red-500/20 transition-all"
+                          >
+                            <Trash2 size={14} />
+                            <span>Remove Key</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Test Results */}
-                {testStatus !== 'idle' && (
-                  <div className={`p-4 rounded-2xl border flex items-start space-x-3 animate-fade-in ${testStatus === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
-                    {testStatus === 'success' ? <Zap size={16} className="shrink-0 mt-0.5" /> : <AlertCircle size={16} className="shrink-0 mt-0.5" />}
-                    <div className="flex-1">
-                      <p className="text-xs font-bold">{testStatus === 'success' ? 'Connection Verified' : 'Connection Failed'}</p>
-                      <p className="text-[10px] opacity-80 mt-1">{testStatus === 'success' ? 'Gemini 3 Pro is ready for generation.' : testError}</p>
+                {/* Connectivity Diagnostic */}
+                <div className="space-y-4">
+                  <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Diagnostics</h3>
+                  <div className="p-5 bg-background/50 border border-border rounded-2xl space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <Zap size={16} className="text-primary" />
+                        <span className="text-xs font-medium">Ping latency to Gemini-3-Pro</span>
+                      </div>
+                      <button 
+                        onClick={handleTestKey}
+                        disabled={!hasApiKey || testStatus === 'testing'}
+                        className="px-3 py-1.5 bg-primary/10 text-primary text-[10px] font-bold rounded-lg hover:bg-primary/20 transition-all disabled:opacity-50"
+                      >
+                        {testStatus === 'testing' ? <Loader2 size={12} className="animate-spin" /> : 'Run Test'}
+                      </button>
                     </div>
-                  </div>
-                )}
 
-                {/* Helpful Links */}
-                <div className="pt-4 border-t border-border">
-                  <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Documentation</h4>
-                  <div className="grid grid-cols-1 gap-2">
-                    <a 
-                      href="https://ai.google.dev/gemini-api/docs/billing" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between p-3 rounded-xl bg-background/50 hover:bg-primary/5 border border-border hover:border-primary/20 transition-all group"
-                    >
-                      <span className="text-xs font-medium text-gray-500 group-hover:text-primary">Billing & Quotas</span>
-                      <ExternalLink size={12} className="text-gray-400 group-hover:text-primary" />
-                    </a>
-                    <a 
-                      href="https://aistudio.google.com/app/apikey" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between p-3 rounded-xl bg-background/50 hover:bg-primary/5 border border-border hover:border-primary/20 transition-all group"
-                    >
-                      <span className="text-xs font-medium text-gray-500 group-hover:text-primary">Get New API Key</span>
-                      <ExternalLink size={12} className="text-gray-400 group-hover:text-primary" />
-                    </a>
+                    {testStatus !== 'idle' && (
+                      <div className={`p-4 rounded-xl border flex items-start space-x-3 animate-fade-in ${testStatus === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
+                        {testStatus === 'success' ? <CheckCircle2 size={16} className="shrink-0 mt-0.5" /> : <AlertCircle size={16} className="shrink-0 mt-0.5" />}
+                        <div className="flex-1">
+                          <p className="text-xs font-bold">{testStatus === 'success' ? 'Verification Successful' : 'Verification Failed'}</p>
+                          <p className="text-[10px] opacity-80 mt-1">{testStatus === 'success' ? 'Environment is stable. Quota limits and project permissions verified.' : testError}</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
+                </div>
+
+                {/* Safety Info */}
+                <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl flex items-start space-x-3">
+                   <Info size={16} className="text-primary shrink-0 mt-0.5" />
+                   <div className="space-y-1">
+                     <p className="text-[10px] text-primary font-bold uppercase tracking-wider">Security Notice</p>
+                     <p className="text-[10px] text-primary/80 leading-relaxed">
+                       Keys are securely managed by your AI Studio environment. Pavel AI never transmits your raw key to its own servers; all requests are routed through Google's official SDK.
+                     </p>
+                   </div>
                 </div>
               </div>
             ) : (
@@ -213,13 +242,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                       বাংলা (Bangla)
                     </button>
                   </div>
-                </div>
-
-                <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl flex items-start space-x-3">
-                   <Info size={16} className="text-primary shrink-0 mt-0.5" />
-                   <p className="text-[10px] text-primary font-medium leading-relaxed">
-                     Changes to language will affect future code generations. Existing workspace contents will remain in their original language.
-                   </p>
                 </div>
               </div>
             )}

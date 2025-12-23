@@ -53,6 +53,11 @@ export default function App() {
     }
   };
 
+  const handleResetKey = () => {
+    setHasApiKey(false);
+    // In many environments, resetting the key means the user needs to select one again via openSelectKey
+  };
+
   const handleGenerate = async (prompt: string, template: ProjectTemplate | null) => {
     if (!isAuthenticated) {
       setIsAuthModalOpen(true);
@@ -106,6 +111,7 @@ export default function App() {
           onClose={() => setIsSettingsOpen(false)} 
           hasApiKey={hasApiKey}
           onSelectKey={handleSelectKey}
+          onResetKey={handleResetKey}
         />
       </ErrorBoundary>
       
