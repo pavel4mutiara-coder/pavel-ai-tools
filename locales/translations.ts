@@ -1,3 +1,7 @@
+
+// Add Language type definition
+export type Language = 'en' | 'bn';
+
 export const translations = {
   en: {
     appName: "Pavel AI Workspace",
@@ -72,7 +76,27 @@ export const translations = {
     step_coding: "Writing React components & Hooks...",
     step_styling: "Applying Tailwind CSS styles...",
     step_configuring: "Configuring TypeScript & Environment...",
-    step_finalizing: "Finalizing build..."
+    step_finalizing: "Finalizing build...",
+
+    // Theme
+    theme: "Appearance",
+    lightMode: "Light Mode",
+    darkMode: "Dark Mode",
+
+    // GitHub
+    github_push: "Push to GitHub",
+    github_connect: "Connect GitHub",
+    github_token_label: "Personal Access Token",
+    github_token_placeholder: "ghp_xxxxxxxxxxxx",
+    github_repo_select: "Select Repository",
+    github_repo_new: "Create New Repository",
+    github_repo_name: "Repository Name",
+    github_repo_desc: "Description",
+    github_repo_private: "Private Repository",
+    github_pushing: "Pushing files to GitHub...",
+    github_success: "Project pushed successfully!",
+    github_error: "GitHub sync failed",
+    github_help: "Need a token? Create one in GitHub Developer Settings with 'repo' scope."
   },
   bn: {
     appName: "পাভেল এআই ওয়ার্কস্পেস",
@@ -147,9 +171,29 @@ export const translations = {
     step_coding: "রিয়্যাক্ট কম্পোনেন্ট এবং হুকস লেখা হচ্ছে...",
     step_styling: "টেইলউইন্ড সিএসএস স্টাইল প্রয়োগ করা হচ্ছে...",
     step_configuring: "টাইপস্ক্রিপ্ট এবং এনভায়রনমেন্ট কনফিগার করা হচ্ছে...",
-    step_finalizing: "বিল্ড চূড়ান্ত করা হচ্ছে..."
+    step_finalizing: "বিল্ড চূড়ান্ত করা হচ্ছে...",
+
+    // Theme
+    theme: "চেহারা",
+    lightMode: "লাইট মোড",
+    darkMode: "ডার্ক মোড",
+
+    // GitHub
+    github_push: "গিটহাবে পুশ করুন",
+    github_connect: "গিটহাব কানেক্ট করুন",
+    github_token_label: "পার্সোনাল অ্যাক্সেস টোকেন",
+    github_token_placeholder: "ghp_xxxxxxxxxxxx",
+    github_repo_select: "রিপোজিটরি নির্বাচন করুন",
+    github_repo_new: "নতুন রিপোজিটরি তৈরি করুন",
+    github_repo_name: "রিপোজিটরির নাম",
+    github_repo_desc: "বিবরণ",
+    github_repo_private: "প্রাইভেট রিপোজিটরি",
+    github_pushing: "গিটহাবে ফাইল পুশ হচ্ছে...",
+    github_success: "প্রজেক্ট সফলভাবে পুশ হয়েছে!",
+    github_error: "গিটহাব সিঙ্ক ব্যর্থ হয়েছে",
+    github_help: "টোকেন প্রয়োজন? গিটহাব ডেভেলপার সেটিংসে 'repo' স্কোপ দিয়ে একটি তৈরি করুন।"
   }
 };
 
-export type Language = 'en' | 'bn';
-export type TranslationKey = keyof typeof translations.en;
+// Add TranslationKey type definition
+export type TranslationKey = keyof typeof translations['en'];

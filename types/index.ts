@@ -3,6 +3,7 @@ export interface User {
   email: string;
   name: string;
   avatar?: string;
+  githubToken?: string;
 }
 
 export interface FileNode {
@@ -47,4 +48,13 @@ export interface ProjectTemplate {
   nameKey: string;
   descriptionKey: string;
   promptModifier: string;
+}
+
+export interface GitHubRepo {
+  id: number;
+  name: string;
+  full_name: string;
+  private: boolean;
+  html_url: string;
+  description: string;
 }

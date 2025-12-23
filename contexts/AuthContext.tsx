@@ -1,6 +1,4 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-// Corrected import to point to types/index.ts where User is defined
 import { User } from '../types/index';
 
 interface AuthContextType {
@@ -10,6 +8,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  updateGithubToken: (token: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,7 +18,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check local storage for persistent session
     const storedUser = localStorage.getItem('pavel_ai_user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -29,7 +27,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, _password: string) => {
     setLoading(true);
-    // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1500));
     const newUser: User = {
       id: Math.random().toString(36).substr(2, 9),
@@ -44,7 +41,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const signup = async (name: string, email: string, _password: string) => {
     setLoading(true);
-    // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1500));
     const newUser: User = {
       id: Math.random().toString(36).substr(2, 9),
@@ -62,8 +58,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('pavel_ai_user');
   };
 
+  const updateGithubToken = (token: string | null) => {
+    if (user) {
+      const updatedUser = { ...user, githubToken: token || undefined };
+      setUser(updatedUser);
+      localStorage.setItem('pavel_ai_user', JSON.stringify(updatedUser));
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, login, signup, logout, updateGithubToken }}>
       {children}
     </AuthContext.Provider>
   );

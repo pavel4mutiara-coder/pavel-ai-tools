@@ -19,8 +19,10 @@
               mono: ['JetBrains Mono', 'monospace'],
             },
             colors: {
-              background: '#0f172a',
-              surface: '#1e293b',
+              background: 'var(--background)',
+              surface: 'var(--surface)',
+              foreground: 'var(--foreground)',
+              border: 'var(--border-color)',
               primary: '#6366f1',
               secondary: '#a855f7',
               accent: '#ec4899',
@@ -33,24 +35,46 @@
       }
     </script>
     <style>
-      body {
-        background-color: #0f172a;
-        color: #f8fafc;
+      :root {
+        --background: #f8fafc;
+        --surface: #ffffff;
+        --foreground: #0f172a;
+        --border-color: rgba(0, 0, 0, 0.08);
+        --scrollbar-track: #f1f5f9;
+        --scrollbar-thumb: #cbd5e1;
+        --scrollbar-thumb-hover: #94a3b8;
       }
+      
+      .dark {
+        --background: #0f172a;
+        --surface: #1e293b;
+        --foreground: #f8fafc;
+        --border-color: rgba(255, 255, 255, 0.08);
+        --scrollbar-track: #1e293b;
+        --scrollbar-thumb: #475569;
+        --scrollbar-thumb-hover: #64748b;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--foreground);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
       /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #1e293b; 
+        background: var(--scrollbar-track); 
       }
       ::-webkit-scrollbar-thumb {
-        background: #475569; 
+        background: var(--scrollbar-thumb); 
         border-radius: 4px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #64748b; 
+        background: var(--scrollbar-thumb-hover); 
       }
     </style>
   <script type="importmap">

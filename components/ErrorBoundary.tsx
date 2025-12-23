@@ -1,9 +1,9 @@
 
-import React, { ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCcw, Home } from 'lucide-react';
 
 interface Props {
-  children: ReactNode;
+  children?: ReactNode;
   fallback?: ReactNode;
   name?: string;
 }
@@ -15,34 +15,36 @@ interface State {
 
 /**
  * ErrorBoundary component to catch rendering errors in its children.
- * Fixed inheritance issue by using React.Component explicitly to ensure property visibility.
+ * Explicitly extending React.Component ensures inherited members are recognized correctly.
  */
-// Inheriting from React.Component to ensure props and setState are correctly inherited and typed
 export class ErrorBoundary extends React.Component<Props, State> {
-  // Initializing state with explicit State type
-  public state: State = {
-    hasError: false,
-    error: null
-  };
+  constructor(props: Props) {
+    super(props);
+    // Initialize component state
+    this.state = {
+      hasError: false,
+      error: null
+    };
+  }
 
   public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Fixed: 'props' is now correctly recognized as a member of React.Component
+    // Log captured error information
     console.error(`Uncaught error in ${this.props.name || 'Component'}:`, error, errorInfo);
   }
 
   private handleReset = () => {
-    // Fixed: 'setState' is now correctly recognized as a member of React.Component
+    // Clear error state and trigger page reload
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
 
   public render() {
+    // Display fallback UI if an error was caught
     if (this.state.hasError) {
-      // Fixed: 'props' access within render method
       if (this.props.fallback) {
         return this.props.fallback;
       }
@@ -52,13 +54,13 @@ export class ErrorBoundary extends React.Component<Props, State> {
           <div className="bg-red-500/10 p-4 rounded-full mb-6">
             <AlertTriangle className="w-12 h-12 text-red-500" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Unexpected Error</h2>
-          <p className="text-gray-400 mb-8 leading-relaxed">
+          <h2 className="text-2xl font-bold text-foreground mb-2">Unexpected Error</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-sm">
             Something went wrong while rendering {this.props.name || 'this component'}. 
             The AI might have generated a malformed structure or a runtime conflict occurred.
           </p>
           
-          <div className="bg-black/40 p-4 rounded-lg w-full mb-8 text-left overflow-auto max-h-40 border border-white/5">
+          <div className="bg-black/40 p-4 rounded-lg w-full mb-8 text-left overflow-auto max-h-40 border border-border">
             <code className="text-xs text-red-400 font-mono">
               {this.state.error?.message || 'Unknown Error'}
             </code>
@@ -74,7 +76,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
             </button>
             <button
               onClick={() => window.location.href = '/'}
-              className="flex items-center space-x-2 px-6 py-2 bg-white/5 hover:bg-white/10 text-gray-300 rounded-lg transition-all font-medium border border-white/10"
+              className="flex items-center space-x-2 px-6 py-2 bg-surface hover:bg-surface/80 text-gray-400 rounded-lg transition-all font-medium border border-border"
             >
               <Home size={16} />
               <span>Go to Dashboard</span>
@@ -84,7 +86,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
       );
     }
 
-    // Fixed: 'props.children' is now correctly recognized via inheritance
+    // Default to rendering children
     return this.props.children;
   }
 }

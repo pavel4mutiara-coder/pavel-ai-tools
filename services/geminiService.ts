@@ -1,10 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ProjectBlueprint, ProjectTemplate } from "../types/index";
 
-// Initialize the Google GenAI client with named parameters and the key from process.env
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-// Defining the response schema for JSON output using the recommended Type enum
 const projectSchema = {
   type: Type.OBJECT,
   properties: {
@@ -75,19 +71,22 @@ const projectSchema = {
   required: ["projectName", "tagline", "description", "techStack", "features", "fileStructure", "estimatedDuration"]
 };
 
+/**
+ * Generates a complete project blueprint using Gemini 3 Pro.
+ */
 export const generateBlueprint = async (prompt: string, language: 'en' | 'bn' = 'en', template: ProjectTemplate | null = null): Promise<ProjectBlueprint> => {
   try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
     const languageInstruction = language === 'bn' 
       ? "The user interface language MUST be Bangla (Bengali). Generate descriptions, comments, and UI text in Bangla. Technical terms (like React, API) can remain in English." 
       : "The user interface language MUST be English.";
 
     const templateInstruction = template 
       ? `PROJECT ARCHITECTURE: ${template.id.toUpperCase()}. 
-         TECHNICAL REQUIREMENTS: ${template.promptModifier}.
-         Ensure the codebase reflects high-quality industry standards for this specific category.` 
+         TECHNICAL REQUIREMENTS: ${template.promptModifier}.` 
       : "PROJECT TYPE: CUSTOM AD-HOC ARCHITECTURE.";
 
-    // Using gemini-3-pro-preview for complex coding tasks as per guidelines
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: `You are Pavel AI, a world-class senior full-stack engineer. 
@@ -102,22 +101,19 @@ export const generateBlueprint = async (prompt: string, language: 'en' | 'bn' = 
       3. BROWSER COMPATIBILITY: Run via Babel Standalone.
          - Standard imports (react, react-dom/client, lucide-react).
          - Use Lucide React for ALL icons.
-         - Do NOT use \`process.env\` or external node modules that require bundling.
       4. COMPONENT ARCHITECTURE:
          - MUST include \`index.html\` (with root div and module script tag).
          - MUST include \`index.tsx\` as entry point.
-         - Break logic into reusable components within a \`components/\` folder.
       5. AESTHETICS:
          - Use Tailwind CSS for ultra-modern design.
-         - Implement responsive layouts, smooth transitions, and dark-mode friendly palettes.
       6. QUALITY:
-         - Ensure clean state management (useState/useEffect).
-         - Add basic error handling in components.
+         - Ensure clean state management and clear component modularity.
       `,
       config: {
         responseMimeType: "application/json",
         responseSchema: projectSchema,
-        temperature: 0.1, 
+        temperature: 0.1,
+        thinkingConfig: { thinkingBudget: 4000 } // Allocate reasoning budget for architecture
       },
     });
 
@@ -127,7 +123,7 @@ export const generateBlueprint = async (prompt: string, language: 'en' | 'bn' = 
     }
 
     return JSON.parse(text) as ProjectBlueprint;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Gemini API Error:", error);
     throw error;
   }
