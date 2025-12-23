@@ -1,5 +1,5 @@
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCcw, Home } from 'lucide-react';
 
 interface ErrorBoundaryProps {
@@ -17,9 +17,9 @@ interface ErrorBoundaryState {
  * ErrorBoundary component to catch rendering errors in its children.
  * This class component provides a standard way to handle runtime errors in the React component tree.
  */
-// Fix: Use the named Component import to ensure TypeScript correctly identifies the class as a React Component and inherits members like props and setState.
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // Fix: Initialize state as a class property to ensure it's properly typed.
+// Extending React.Component explicitly ensures that TypeScript correctly recognizes inherited members like this.props, this.state, and this.setState.
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  // Initializing state as a class property with explicit typing.
   public state: ErrorBoundaryState = {
     hasError: false,
     error: null
@@ -29,27 +29,28 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     super(props);
   }
 
-  // Fix: Static method to catch errors and update the state.
+  // Static method to update state after an error is caught in a child component.
   public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  // Fix: Lifecycle method to handle error side-effects like logging.
+  // Lifecycle method to handle side-effects after an error occurs.
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Fix: Accessed this.props which is now properly recognized as part of the Component instance.
+    // Accessing 'props' inherited from React.Component.
     console.error(`Uncaught error in ${this.props.name || 'Component'}:`, error, errorInfo);
   }
 
-  // Fix: Private method to reset the component's state and refresh the application.
+  // Resets the error state and reloads the application to recover from the error.
   private handleReset = () => {
-    // Fix: Called this.setState which is inherited from the React Component base class.
+    // Accessing 'setState' inherited from React.Component.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
 
   public render() {
-    // Fix: Use this.state and this.props inherited from Component.
+    // Accessing 'state' inherited from React.Component.
     if (this.state.hasError) {
+      // Accessing 'props' inherited from React.Component.
       if (this.props.fallback) {
         return this.props.fallback;
       }
@@ -91,7 +92,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       );
     }
 
-    // Fix: Return nested children using the correctly inherited this.props.
+    // Returning children inherited from the React component tree via this.props.
     return this.props.children;
   }
 }

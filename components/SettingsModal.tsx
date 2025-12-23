@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { 
   X, Key, Shield, CheckCircle2, AlertCircle, 
   ExternalLink, Globe, Moon, Sun, Monitor, 
-  Zap, Info, RefreshCcw, Loader2, Trash2, PlusCircle, ShieldCheck
+  Zap, Info, RefreshCcw, Loader2, Trash2, PlusCircle, ShieldCheck,
+  ChevronRight, Circle
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -96,26 +97,26 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                     {hasApiKey && (
                       <span className="flex items-center space-x-1 px-2 py-0.5 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full border border-green-500/20">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                        <span>Authenticated</span>
+                        <span>{t('apiStatusAuthenticated')}</span>
                       </span>
                     )}
                   </div>
                   
                   {/* Status Indicator Card */}
-                  <div className={`p-6 rounded-3xl border ${hasApiKey ? 'bg-primary/5 border-primary/20' : 'bg-yellow-500/5 border-yellow-500/20'} transition-all`}>
+                  <div className={`p-6 rounded-3xl border ${hasApiKey ? 'bg-primary/5 border-primary/20' : 'bg-yellow-500/5 border-yellow-500/20'} transition-all shadow-sm`}>
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className={`p-4 rounded-full ${hasApiKey ? 'bg-primary/10 text-primary' : 'bg-yellow-500/10 text-yellow-500'}`}>
                         {hasApiKey ? <Shield size={32} /> : <AlertCircle size={32} />}
                       </div>
                       
-                      <div>
+                      <div className="max-w-xs">
                         <p className="text-sm font-bold">
-                          {hasApiKey ? 'Primary Key Active' : 'No Active Key Configured'}
+                          {hasApiKey ? 'Environment Linked' : t('apiStatusPending')}
                         </p>
-                        <p className="text-[11px] text-gray-500 mt-1">
+                        <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
                           {hasApiKey 
                             ? 'Your session is encrypted and authenticated with Google AI Studio.' 
-                            : 'Connect your API key to enable high-fidelity code generation with Gemini 3 Pro.'}
+                            : t('apiKeyDesc')}
                         </p>
                       </div>
 
@@ -126,7 +127,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                             className="w-full flex items-center justify-center space-x-2 py-3 bg-primary text-white rounded-2xl text-xs font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
                           >
                             <PlusCircle size={14} />
-                            <span>Add API Key</span>
+                            <span>{t('openKeySelector')}</span>
                           </button>
                         ) : (
                           <button 
@@ -134,7 +135,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                             className="w-full flex items-center justify-center space-x-2 py-3 bg-surface border border-border rounded-2xl text-xs font-bold hover:bg-background transition-all"
                           >
                             <RefreshCcw size={14} />
-                            <span>Change Key</span>
+                            <span>Switch Account</span>
                           </button>
                         )}
                         
@@ -147,7 +148,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                             className="w-full flex items-center justify-center space-x-2 py-3 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl text-xs font-bold hover:bg-red-500/20 transition-all"
                           >
                             <Trash2 size={14} />
-                            <span>Remove Key</span>
+                            <span>Unlink Project</span>
                           </button>
                         )}
                       </div>
@@ -162,14 +163,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <Zap size={16} className="text-primary" />
-                        <span className="text-xs font-medium">Ping latency to Gemini-3-Pro</span>
+                        <span className="text-xs font-medium">Cloud Latency Check</span>
                       </div>
                       <button 
                         onClick={handleTestKey}
                         disabled={!hasApiKey || testStatus === 'testing'}
-                        className="px-3 py-1.5 bg-primary/10 text-primary text-[10px] font-bold rounded-lg hover:bg-primary/20 transition-all disabled:opacity-50"
+                        className="px-4 py-2 bg-primary/10 text-primary text-[10px] font-bold rounded-xl hover:bg-primary/20 transition-all disabled:opacity-50"
                       >
-                        {testStatus === 'testing' ? <Loader2 size={12} className="animate-spin" /> : 'Run Test'}
+                        {testStatus === 'testing' ? (
+                          <div className="flex items-center space-x-2">
+                            <Loader2 size={12} className="animate-spin" />
+                            <span>{t('testing')}</span>
+                          </div>
+                        ) : t('testConnection')}
                       </button>
                     </div>
 
@@ -177,7 +183,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                       <div className={`p-4 rounded-xl border flex items-start space-x-3 animate-fade-in ${testStatus === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
                         {testStatus === 'success' ? <CheckCircle2 size={16} className="shrink-0 mt-0.5" /> : <AlertCircle size={16} className="shrink-0 mt-0.5" />}
                         <div className="flex-1">
-                          <p className="text-xs font-bold">{testStatus === 'success' ? 'Verification Successful' : 'Verification Failed'}</p>
+                          <p className="text-xs font-bold">{testStatus === 'success' ? t('testSuccess') : t('testError')}</p>
                           <p className="text-[10px] opacity-80 mt-1">{testStatus === 'success' ? 'Environment is stable. Quota limits and project permissions verified.' : testError}</p>
                         </div>
                       </div>
@@ -185,13 +191,32 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                   </div>
                 </div>
 
+                {/* Quick Setup Guide */}
+                <div className="space-y-4 pt-4 border-t border-border">
+                  <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Quick Setup Guide</h3>
+                  <div className="space-y-3">
+                    {[
+                      { step: 1, text: t('apiStep1') },
+                      { step: 2, text: t('apiStep2') },
+                      { step: 3, text: t('apiStep3') }
+                    ].map((s) => (
+                      <div key={s.step} className="flex items-start space-x-3 p-3 bg-surface border border-border rounded-xl">
+                        <div className="w-5 h-5 bg-primary/10 text-primary flex items-center justify-center rounded-full text-[10px] font-bold shrink-0 mt-0.5">
+                          {s.step}
+                        </div>
+                        <span className="text-xs text-gray-500 leading-tight">{s.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Safety Info */}
                 <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl flex items-start space-x-3">
                    <Info size={16} className="text-primary shrink-0 mt-0.5" />
                    <div className="space-y-1">
-                     <p className="text-[10px] text-primary font-bold uppercase tracking-wider">Security Notice</p>
+                     <p className="text-[10px] text-primary font-bold uppercase tracking-wider">Security & Privacy</p>
                      <p className="text-[10px] text-primary/80 leading-relaxed">
-                       Keys are securely managed by your AI Studio environment. Pavel AI never transmits your raw key to its own servers; all requests are routed through Google's official SDK.
+                       Pavel AI uses the browser's native API selector. Your key is never stored on our servers and stays exclusively within your session environment.
                      </p>
                    </div>
                 </div>

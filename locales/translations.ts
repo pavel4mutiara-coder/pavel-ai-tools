@@ -96,7 +96,22 @@ export const translations = {
     github_pushing: "Pushing files to GitHub...",
     github_success: "Project pushed successfully!",
     github_error: "GitHub sync failed",
-    github_help: "Need a token? Create one in GitHub Developer Settings with 'repo' scope."
+    github_help: "Need a token? Create one in GitHub Developer Settings with 'repo' scope.",
+
+    // API Key & Onboarding
+    apiKeyNeeded: "API Configuration Needed",
+    apiKeyDesc: "To unlock full-fidelity code generation with Gemini 3 Pro, you must link your Google AI Studio project.",
+    openKeySelector: "Open Project Selector",
+    billingLink: "Learn about Billing",
+    apiStep1: "Click the Project Selector button.",
+    apiStep2: "Choose a project from your Google AI Studio account.",
+    apiStep3: "Ensure your project has billing enabled for Gemini 3 models.",
+    apiStatusAuthenticated: "Securely Authenticated",
+    apiStatusPending: "Configuration Required",
+    testConnection: "Test Connection",
+    testing: "Testing...",
+    testSuccess: "Connection Stable",
+    testError: "Connection Refused"
   },
   bn: {
     appName: "পাভেল এআই ওয়ার্কস্পেস",
@@ -191,7 +206,22 @@ export const translations = {
     github_pushing: "গিটহাবে ফাইল পুশ হচ্ছে...",
     github_success: "প্রজেক্ট সফলভাবে পুশ হয়েছে!",
     github_error: "গিটহাব সিঙ্ক ব্যর্থ হয়েছে",
-    github_help: "টোকেন প্রয়োজন? গিটহাব ডেভেলপার সেটিংসে 'repo' স্কোপ দিয়ে একটি তৈরি করুন।"
+    github_help: "টোকেন প্রয়োজন? গিটহাব ডেভেলপার সেটিংসে 'repo' স্কোপ দিয়ে একটি তৈরি করুন।",
+
+    // API Key & Onboarding
+    apiKeyNeeded: "এপিআই কনফিগারেশন প্রয়োজন",
+    apiKeyDesc: "Gemini 3 Pro এর মাধ্যমে উন্নত কোড জেনারেট করতে আপনার Google AI Studio প্রজেক্ট লিঙ্ক করুন।",
+    openKeySelector: "প্রজেক্ট সিলেক্টর খুলুন",
+    billingLink: "বিলিং সম্পর্কে জানুন",
+    apiStep1: "প্রজেক্ট সিলেক্টর বাটনে ক্লিক করুন।",
+    apiStep2: "আপনার গুগল এআই স্টুডিও অ্যাকাউন্ট থেকে একটি প্রজেক্ট বেছে নিন।",
+    apiStep3: "নিশ্চিত করুন যে আপনার প্রজেক্টে বিলিং সক্রিয় আছে।",
+    apiStatusAuthenticated: "নিরাপদভাবে যুক্ত",
+    apiStatusPending: "কনফিগারেশন প্রয়োজন",
+    testConnection: "কানেকশন পরীক্ষা করুন",
+    testing: "পরীক্ষা চলছে...",
+    testSuccess: "কানেকশন ঠিক আছে",
+    testError: "কানেকশন ব্যর্থ"
   }
 };
 

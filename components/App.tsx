@@ -5,7 +5,7 @@ import { InputSection } from './InputSection';
 import { BlueprintDisplay } from './BlueprintDisplay';
 import { ProjectBlueprint, AppState, ProjectTemplate } from '../types/index';
 // Added missing Key icon to the lucide-react import list
-import { Github, Settings, LogOut, Moon, Sun, Key } from 'lucide-react';
+import { Github, Settings, LogOut, Moon, Sun, Key, ShieldCheck, Zap, Info, ChevronRight, Sparkles } from 'lucide-react';
 import { Logo } from './Logo';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -194,21 +194,55 @@ export default function App() {
         <ErrorBoundary name="App Workspace">
           {!hasApiKey && isAuthenticated ? (
              <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center animate-fade-in">
-               <div className="bg-surface p-12 rounded-[3rem] border border-border shadow-2xl max-w-lg">
-                  <Key size={48} className="text-primary mb-6 mx-auto animate-bounce" />
-                  <h2 className="text-2xl font-bold mb-4">API Configuration Needed</h2>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-8 leading-relaxed">
-                    To start building apps with <strong>Gemini 3 Pro</strong>, you must configure your API key in the Workspace Settings.
-                  </p>
-                  <button 
-                    onClick={() => setIsSettingsOpen(true)}
-                    className="w-full py-4 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold transition-all shadow-lg shadow-primary/30"
-                  >
-                    Open Settings
-                  </button>
-                  <p className="mt-6 text-[10px] text-gray-500">
-                    Paid tier project required. <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Billing Docs</a>
-                  </p>
+               <div className="bg-surface p-10 md:p-14 rounded-[3.5rem] border border-border shadow-[0_20px_50px_rgba(0,0,0,0.1)] max-w-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-4 opacity-5">
+                    <Sparkles size={120} className="text-primary" />
+                  </div>
+
+                  <div className="relative z-10 space-y-8">
+                    <div className="flex justify-center">
+                      <div className="p-5 bg-primary/10 rounded-[2rem] relative group">
+                        <Key size={48} className="text-primary animate-pulse group-hover:scale-110 transition-transform" />
+                        <div className="absolute -bottom-1 -right-1 bg-green-500 border-4 border-surface w-6 h-6 rounded-full flex items-center justify-center">
+                          <Zap size={10} className="text-white fill-current" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h2 className="text-3xl font-bold mb-4 tracking-tight">{t('apiKeyNeeded')}</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-sm mx-auto">
+                        {t('apiKeyDesc')}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 text-left">
+                       <div className="flex items-start space-x-4 p-4 bg-background/50 border border-border rounded-2xl">
+                          <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">1</div>
+                          <p className="text-xs text-gray-500 font-medium pt-2">{t('apiStep1')}</p>
+                       </div>
+                       <div className="flex items-start space-x-4 p-4 bg-background/50 border border-border rounded-2xl">
+                          <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">2</div>
+                          <p className="text-xs text-gray-500 font-medium pt-2">{t('apiStep2')}</p>
+                       </div>
+                    </div>
+
+                    <div className="space-y-3 pt-4">
+                      <button 
+                        onClick={handleSelectKey}
+                        className="w-full flex items-center justify-center space-x-3 py-4 bg-primary hover:bg-primary/90 text-white rounded-[1.5rem] font-bold transition-all shadow-xl shadow-primary/30 active:scale-[0.98]"
+                      >
+                        <span>{t('openKeySelector')}</span>
+                        <ChevronRight size={18} />
+                      </button>
+                      <div className="flex justify-center items-center space-x-2">
+                        <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-[10px] text-gray-400 hover:text-primary transition-colors flex items-center space-x-1 uppercase tracking-widest font-bold">
+                          <span>{t('billingLink')}</span>
+                          <Info size={10} />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                </div>
              </div>
           ) : (
