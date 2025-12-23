@@ -1,10 +1,10 @@
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React from 'react';
 import { AlertTriangle, RefreshCcw, Home } from 'lucide-react';
 
 interface ErrorBoundaryProps {
-  children?: ReactNode;
-  fallback?: ReactNode;
+  children?: React.ReactNode;
+  fallback?: React.ReactNode;
   name?: string;
 }
 
@@ -17,8 +17,8 @@ interface ErrorBoundaryState {
  * ErrorBoundary component to catch rendering errors in its children.
  * This class component provides a standard way to handle runtime errors in the React component tree.
  */
-// Fix: Directly extending Component from 'react' to ensure props and setState are correctly inherited and recognized by TypeScript.
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+// Fix: Explicitly extending React.Component and using React namespace for types to ensure props and setState are correctly inherited and recognized by TypeScript.
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   // Initializing state as a class property with explicit typing.
   public state: ErrorBoundaryState = {
     hasError: false,
@@ -35,14 +35,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   // Lifecycle method to handle side-effects after an error occurs.
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Fix: Accessing 'props' inherited from React.Component.
+  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Accessing 'props' inherited from React.Component.
     console.error(`Uncaught error in ${this.props.name || 'Component'}:`, error, errorInfo);
   }
 
   // Resets the error state and reloads the application to recover from the error.
   private handleReset = () => {
-    // Fix: Accessing 'setState' inherited from React.Component.
+    // Accessing 'setState' inherited from React.Component.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
@@ -50,7 +50,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   public render() {
     // Accessing 'state' inherited from React.Component.
     if (this.state.hasError) {
-      // Fix: Accessing 'props' inherited from React.Component.
+      // Accessing 'props' inherited from React.Component.
       if (this.props.fallback) {
         return this.props.fallback;
       }
@@ -62,7 +62,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">Unexpected Error</h2>
           <p className="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-sm">
-            {/* Fix: Accessing 'props' inherited from React.Component. */}
+            {/* Accessing 'props' inherited from React.Component. */}
             Something went wrong while rendering {this.props.name || 'this component'}. 
             The AI might have generated a malformed structure or a runtime conflict occurred.
           </p>
@@ -93,7 +93,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       );
     }
 
-    // Fix: Accessing 'props' inherited from React.Component.
+    // Accessing 'props' inherited from React.Component.
     return this.props.children;
   }
 }

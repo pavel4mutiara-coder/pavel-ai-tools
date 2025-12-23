@@ -4,7 +4,7 @@ import {
   X, Key, Shield, CheckCircle2, AlertCircle, 
   ExternalLink, Globe, Moon, Sun, Monitor, 
   Zap, Info, RefreshCcw, Loader2, Trash2, PlusCircle, ShieldCheck,
-  ChevronRight, Circle, HelpCircle
+  ChevronRight, Circle, HelpCircle, Power
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -38,7 +38,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
       }
     } catch (err: any) {
       setTestStatus('error');
-      setTestError(err.message || "Connection failed. Please ensure your project allows Gemini API requests.");
+      setTestError(err.message || "Connection failed. Please ensure Gemini API is enabled in your Google AI Studio project.");
     }
   };
 
@@ -52,11 +52,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
         <div className="px-8 py-6 border-b border-border flex items-center justify-between bg-primary/5">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-primary/10 rounded-xl">
-              <Key size={20} className="text-primary" />
+              <Power size={20} className="text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-foreground">Workspace Settings</h2>
-              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Configure your AI Environment</p>
+              <h2 className="text-xl font-bold text-foreground">Workspace Config</h2>
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Manage AI & Preferences</p>
             </div>
           </div>
           <button 
@@ -74,8 +74,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
               onClick={() => setActiveTab('api')}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${activeTab === 'api' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-500 hover:bg-surface hover:text-foreground'}`}
             >
-              <ShieldCheck size={16} />
-              <span>AI Connectivity</span>
+              <Zap size={16} />
+              <span>Activation</span>
             </button>
             <button 
               onClick={() => setActiveTab('general')}
@@ -93,7 +93,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                 {/* Manager Section */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-foreground">Model Access</h3>
+                    <h3 className="text-sm font-bold text-foreground">AI Tool Activation</h3>
                     {hasApiKey && (
                       <span className="flex items-center space-x-1 px-2 py-0.5 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full border border-green-500/20">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
@@ -102,110 +102,76 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                     )}
                   </div>
                   
-                  {/* Status Indicator Card */}
-                  <div className={`p-6 rounded-3xl border ${hasApiKey ? 'bg-primary/5 border-primary/20' : 'bg-gray-500/5 border-border'} transition-all shadow-sm`}>
-                    <div className="flex flex-col items-center text-center space-y-4">
-                      <div className={`p-4 rounded-full ${hasApiKey ? 'bg-primary/10 text-primary' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'}`}>
-                        {hasApiKey ? <Shield size={32} /> : <Key size={32} />}
-                      </div>
-                      
-                      <div className="max-w-xs">
-                        <p className="text-sm font-bold">
-                          {hasApiKey ? 'AI Session Active' : t('apiStatusPending')}
-                        </p>
-                        <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
-                          {hasApiKey 
-                            ? 'Your session is authenticated. You can now use Gemini to build full-stack apps.' 
-                            : t('apiKeyDesc')}
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full pt-2">
-                        {!hasApiKey ? (
-                          <button 
-                            onClick={onSelectKey}
-                            className="w-full flex items-center justify-center space-x-2 py-3 bg-primary text-white rounded-2xl text-xs font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
-                          >
-                            <PlusCircle size={14} />
-                            <span>{t('openKeySelector')}</span>
-                          </button>
-                        ) : (
-                          <button 
-                            onClick={onSelectKey}
-                            className="w-full flex items-center justify-center space-x-2 py-3 bg-surface border border-border rounded-2xl text-xs font-bold hover:bg-background transition-all"
-                          >
-                            <RefreshCcw size={14} />
-                            <span>Switch Account</span>
-                          </button>
-                        )}
-                        
-                        {hasApiKey && (
-                          <button 
-                            onClick={() => {
-                              onResetKey();
-                              setTestStatus('idle');
-                            }}
-                            className="w-full flex items-center justify-center space-x-2 py-3 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl text-xs font-bold hover:bg-red-500/20 transition-all"
-                          >
-                            <Trash2 size={14} />
-                            <span>Unlink AI</span>
-                          </button>
-                        )}
-                        {!hasApiKey && (
-                           <a 
-                             href="https://aistudio.google.com/app/apikey" 
-                             target="_blank" 
-                             rel="noopener noreferrer"
-                             className="w-full flex items-center justify-center space-x-2 py-3 bg-background border border-border rounded-2xl text-xs font-bold hover:border-primary/30 transition-all"
-                           >
-                             <HelpCircle size={14} />
-                             <span>{t('billingLink')}</span>
-                           </a>
-                        )}
-                      </div>
+                  {/* Action Card */}
+                  <div className={`p-8 rounded-[2rem] border ${hasApiKey ? 'bg-primary/5 border-primary/20 shadow-inner' : 'bg-background/80 border-border'} transition-all text-center space-y-6`}>
+                    <div className="flex justify-center">
+                       <div className={`p-6 rounded-[1.5rem] ${hasApiKey ? 'bg-primary/10 text-primary' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'}`}>
+                         {hasApiKey ? <ShieldCheck size={40} /> : <Key size={40} />}
+                       </div>
                     </div>
-                  </div>
-                </div>
 
-                {/* Connectivity Diagnostic */}
-                <div className="space-y-4">
-                  <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Connectivity Test</h3>
-                  <div className="p-5 bg-background/50 border border-border rounded-2xl space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <Zap size={16} className="text-primary" />
-                        <span className="text-xs font-medium">Verify AI Response</span>
-                      </div>
+                    <div className="space-y-2">
+                       <h4 className="text-lg font-bold">{hasApiKey ? 'AI Successfully Linked' : 'Activate with Free Key'}</h4>
+                       <p className="text-xs text-gray-500 leading-relaxed max-w-xs mx-auto">
+                         {hasApiKey 
+                           ? 'Your workspace tools are fully operational. You can now build, edit, and preview apps.' 
+                           : 'Link your Google account project to enable the software architect tools.'}
+                       </p>
+                    </div>
+
+                    <div className="flex flex-col space-y-3">
                       <button 
-                        onClick={handleTestKey}
-                        disabled={!hasApiKey || testStatus === 'testing'}
-                        className="px-4 py-2 bg-primary/10 text-primary text-[10px] font-bold rounded-xl hover:bg-primary/20 transition-all disabled:opacity-50"
+                        onClick={onSelectKey}
+                        className="w-full flex items-center justify-center space-x-3 py-4 bg-primary text-white rounded-2xl text-sm font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/25 active:scale-95"
                       >
-                        {testStatus === 'testing' ? (
-                          <div className="flex items-center space-x-2">
-                            <Loader2 size={12} className="animate-spin" />
-                            <span>{t('testing')}</span>
-                          </div>
-                        ) : t('testConnection')}
+                        <Zap size={16} className="fill-current" />
+                        <span>{hasApiKey ? 'Reconnect / Switch' : t('openKeySelector')}</span>
                       </button>
-                    </div>
 
-                    {testStatus !== 'idle' && (
-                      <div className={`p-4 rounded-xl border flex items-start space-x-3 animate-fade-in ${testStatus === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
-                        {testStatus === 'success' ? <CheckCircle2 size={16} className="shrink-0 mt-0.5" /> : <AlertCircle size={16} className="shrink-0 mt-0.5" />}
-                        <div className="flex-1">
-                          <p className="text-xs font-bold">{testStatus === 'success' ? t('testSuccess') : t('testError')}</p>
-                          <p className="text-[10px] opacity-80 mt-1">{testStatus === 'success' ? 'Environment is stable. Project permissions verified.' : testError}</p>
-                        </div>
-                      </div>
-                    )}
+                      {hasApiKey && (
+                        <button 
+                          onClick={onResetKey}
+                          className="w-full py-3 text-red-500 text-xs font-bold hover:bg-red-500/5 rounded-xl transition-colors"
+                        >
+                          Deactivate Tools
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Quick Setup Guide */}
+                {/* Connection verification */}
+                <div className="space-y-4">
+                  <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Diagnostic Test</h3>
+                  <div className="p-5 bg-background/50 border border-border rounded-2xl flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                       <RefreshCcw size={16} className={`text-primary ${testStatus === 'testing' ? 'animate-spin' : ''}`} />
+                       <span className="text-xs font-medium">Verify AI Architect Status</span>
+                    </div>
+                    <button 
+                      onClick={handleTestKey}
+                      disabled={!hasApiKey || testStatus === 'testing'}
+                      className="px-4 py-2 bg-surface border border-border text-[10px] font-bold rounded-xl hover:border-primary/50 transition-all disabled:opacity-30"
+                    >
+                      {testStatus === 'testing' ? t('testing') : t('testConnection')}
+                    </button>
+                  </div>
+
+                  {testStatus !== 'idle' && (
+                    <div className={`p-4 rounded-xl border flex items-start space-x-3 animate-fade-in ${testStatus === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
+                      {testStatus === 'success' ? <CheckCircle2 size={16} className="shrink-0 mt-0.5" /> : <AlertCircle size={16} className="shrink-0 mt-0.5" />}
+                      <div className="flex-1">
+                        <p className="text-xs font-bold">{testStatus === 'success' ? 'Success: Tools Ready' : 'Activation Error'}</p>
+                        <p className="text-[10px] opacity-80 mt-1">{testStatus === 'success' ? 'AI models are responding. Your project quota is healthy.' : testError}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Guide Section */}
                 <div className="space-y-4 pt-4 border-t border-border">
-                  <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Quick Setup Guide</h3>
-                  <div className="space-y-3">
+                  <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Setup Instructions</h3>
+                  <div className="grid grid-cols-1 gap-3">
                     {[
                       { step: 1, text: t('apiStep1') },
                       { step: 2, text: t('apiStep2') },
@@ -221,15 +187,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                   </div>
                 </div>
 
-                {/* Privacy Info */}
-                <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl flex items-start space-x-3">
-                   <Info size={16} className="text-primary shrink-0 mt-0.5" />
-                   <div className="space-y-1">
-                     <p className="text-[10px] text-primary font-bold uppercase tracking-wider">Privacy & Free Tier</p>
-                     <p className="text-[10px] text-primary/80 leading-relaxed">
-                       Pavel AI supports Google AI Studio's free tier. Your key is stored locally in your browser and is never uploaded to any third-party server.
-                     </p>
-                   </div>
+                {/* Footer Help */}
+                <div className="flex justify-center pt-2">
+                   <a 
+                     href="https://aistudio.google.com/app/apikey" 
+                     target="_blank" 
+                     rel="noopener noreferrer"
+                     className="flex items-center space-x-2 text-[10px] font-bold text-primary uppercase tracking-widest hover:underline"
+                   >
+                     <HelpCircle size={12} />
+                     <span>{t('billingLink')}</span>
+                   </a>
                 </div>
               </div>
             ) : (

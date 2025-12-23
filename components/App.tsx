@@ -5,7 +5,7 @@ import { InputSection } from './InputSection';
 import { BlueprintDisplay } from './BlueprintDisplay';
 import { ProjectBlueprint, AppState, ProjectTemplate } from '../types/index';
 // Added missing Key icon to the lucide-react import list
-import { Github, Settings, LogOut, Moon, Sun, Key, ShieldCheck, Zap, Info, ChevronRight, Sparkles, HelpCircle } from 'lucide-react';
+import { Github, Settings, LogOut, Moon, Sun, Key, ShieldCheck, Zap, Info, ChevronRight, Sparkles, HelpCircle, Power } from 'lucide-react';
 import { Logo } from './Logo';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -84,7 +84,7 @@ export default function App() {
     } catch (err: any) {
       setAppState(AppState.ERROR);
       if (err.message?.includes("Requested entity was not found.")) {
-        setError("AI Connection Error: Please re-select your API key in settings. Ensure Gemini API is enabled for your project.");
+        setError("AI Activation Error: Your session needs to be re-authenticated. Please open settings and click Connect Now.");
         setHasApiKey(false);
         setIsSettingsOpen(true);
       } else {
@@ -194,53 +194,62 @@ export default function App() {
         <ErrorBoundary name="App Workspace">
           {!hasApiKey && isAuthenticated ? (
              <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center animate-fade-in">
-               <div className="bg-surface p-10 md:p-14 rounded-[3.5rem] border border-border shadow-[0_20px_50px_rgba(0,0,0,0.1)] max-w-xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-4 opacity-5">
-                    <Sparkles size={120} className="text-primary" />
+               <div className="bg-surface p-10 md:p-16 rounded-[4rem] border border-border shadow-[0_25px_60px_rgba(0,0,0,0.15)] max-w-xl relative overflow-hidden">
+                  <div className="absolute -top-10 -right-10 opacity-[0.03] pointer-events-none">
+                    <Power size={300} className="text-primary" />
                   </div>
 
-                  <div className="relative z-10 space-y-8">
+                  <div className="relative z-10 space-y-10">
                     <div className="flex justify-center">
-                      <div className="p-5 bg-primary/10 rounded-[2rem] relative group">
-                        <Key size={48} className="text-primary animate-pulse group-hover:scale-110 transition-transform" />
-                        <div className="absolute -bottom-1 -right-1 bg-green-500 border-4 border-surface w-6 h-6 rounded-full flex items-center justify-center">
-                          <Zap size={10} className="text-white fill-current" />
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full animate-pulse"></div>
+                        <div className="p-6 bg-primary/10 rounded-[2.5rem] relative border border-primary/20">
+                          <Zap size={56} className="text-primary animate-pulse" fill="currentColor" />
                         </div>
                       </div>
                     </div>
 
-                    <div>
-                      <h2 className="text-3xl font-bold mb-4 tracking-tight">{t('apiKeyNeeded')}</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-sm mx-auto">
+                    <div className="space-y-4">
+                      <h2 className="text-4xl font-black text-foreground tracking-tight">{t('apiKeyNeeded')}</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-base leading-relaxed max-w-xs mx-auto font-medium">
                         {t('apiKeyDesc')}
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4 text-left">
-                       <div className="flex items-start space-x-4 p-4 bg-background/50 border border-border rounded-2xl">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">1</div>
-                          <p className="text-xs text-gray-500 font-medium pt-2">{t('apiStep1')}</p>
-                       </div>
-                       <div className="flex items-start space-x-4 p-4 bg-background/50 border border-border rounded-2xl">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">2</div>
-                          <p className="text-xs text-gray-500 font-medium pt-2">{t('apiStep3')}</p>
-                       </div>
+                    <div className="grid grid-cols-1 gap-4 text-left max-w-sm mx-auto">
+                       {[
+                         { step: 1, text: t('apiStep1') },
+                         { step: 2, text: t('apiStep2') },
+                         { step: 3, text: t('apiStep3') }
+                       ].map(s => (
+                        <div key={s.step} className="flex items-center space-x-4 p-4 bg-background/40 border border-border rounded-[1.5rem] group hover:border-primary/30 transition-all">
+                          <div className="w-10 h-10 rounded-2xl bg-primary/5 text-primary flex items-center justify-center text-sm font-black shrink-0 border border-primary/10 group-hover:bg-primary/10 transition-colors">
+                            {s.step}
+                          </div>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 font-bold leading-tight">{s.text}</p>
+                        </div>
+                       ))}
                     </div>
 
-                    <div className="space-y-3 pt-4">
+                    <div className="space-y-4 pt-4">
                       <button 
                         onClick={handleSelectKey}
-                        className="w-full flex items-center justify-center space-x-3 py-4 bg-primary hover:bg-primary/90 text-white rounded-[1.5rem] font-bold transition-all shadow-xl shadow-primary/30 active:scale-[0.98]"
+                        className="w-full flex items-center justify-center space-x-3 py-5 bg-primary hover:bg-primary/90 text-white rounded-[2rem] text-lg font-black transition-all shadow-2xl shadow-primary/30 active:scale-[0.97]"
                       >
+                        <Power size={20} />
                         <span>{t('openKeySelector')}</span>
-                        <ChevronRight size={18} />
+                        <ChevronRight size={20} />
                       </button>
-                      <div className="flex justify-center items-center space-x-2">
-                        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-[10px] text-gray-400 hover:text-primary transition-colors flex items-center space-x-1 uppercase tracking-widest font-bold">
-                          <span>{t('billingLink')}</span>
-                          <HelpCircle size={10} />
-                        </a>
-                      </div>
+                      
+                      <a 
+                        href="https://aistudio.google.com/app/apikey" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center justify-center space-x-2 text-[10px] font-black text-gray-400 hover:text-primary transition-colors uppercase tracking-[0.2em]"
+                      >
+                        <HelpCircle size={12} />
+                        <span>{t('billingLink')}</span>
+                      </a>
                     </div>
                   </div>
                </div>
