@@ -4,7 +4,7 @@ import {
   X, Key, Shield, CheckCircle2, AlertCircle, 
   ExternalLink, Globe, Moon, Sun, Monitor, 
   Zap, Info, RefreshCcw, Loader2, Trash2, PlusCircle, ShieldCheck,
-  ChevronRight, Circle
+  ChevronRight, Circle, HelpCircle
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -38,7 +38,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
       }
     } catch (err: any) {
       setTestStatus('error');
-      setTestError(err.message || "Connection failed. Please check your billing status or project access.");
+      setTestError(err.message || "Connection failed. Please ensure your project allows Gemini API requests.");
     }
   };
 
@@ -75,7 +75,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${activeTab === 'api' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-500 hover:bg-surface hover:text-foreground'}`}
             >
               <ShieldCheck size={16} />
-              <span>Key Manager</span>
+              <span>AI Connectivity</span>
             </button>
             <button 
               onClick={() => setActiveTab('general')}
@@ -93,7 +93,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                 {/* Manager Section */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-foreground">API Management</h3>
+                    <h3 className="text-sm font-bold text-foreground">Model Access</h3>
                     {hasApiKey && (
                       <span className="flex items-center space-x-1 px-2 py-0.5 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full border border-green-500/20">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
@@ -103,19 +103,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                   </div>
                   
                   {/* Status Indicator Card */}
-                  <div className={`p-6 rounded-3xl border ${hasApiKey ? 'bg-primary/5 border-primary/20' : 'bg-yellow-500/5 border-yellow-500/20'} transition-all shadow-sm`}>
+                  <div className={`p-6 rounded-3xl border ${hasApiKey ? 'bg-primary/5 border-primary/20' : 'bg-gray-500/5 border-border'} transition-all shadow-sm`}>
                     <div className="flex flex-col items-center text-center space-y-4">
-                      <div className={`p-4 rounded-full ${hasApiKey ? 'bg-primary/10 text-primary' : 'bg-yellow-500/10 text-yellow-500'}`}>
-                        {hasApiKey ? <Shield size={32} /> : <AlertCircle size={32} />}
+                      <div className={`p-4 rounded-full ${hasApiKey ? 'bg-primary/10 text-primary' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'}`}>
+                        {hasApiKey ? <Shield size={32} /> : <Key size={32} />}
                       </div>
                       
                       <div className="max-w-xs">
                         <p className="text-sm font-bold">
-                          {hasApiKey ? 'Environment Linked' : t('apiStatusPending')}
+                          {hasApiKey ? 'AI Session Active' : t('apiStatusPending')}
                         </p>
                         <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
                           {hasApiKey 
-                            ? 'Your session is encrypted and authenticated with Google AI Studio.' 
+                            ? 'Your session is authenticated. You can now use Gemini to build full-stack apps.' 
                             : t('apiKeyDesc')}
                         </p>
                       </div>
@@ -148,8 +148,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                             className="w-full flex items-center justify-center space-x-2 py-3 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl text-xs font-bold hover:bg-red-500/20 transition-all"
                           >
                             <Trash2 size={14} />
-                            <span>Unlink Project</span>
+                            <span>Unlink AI</span>
                           </button>
+                        )}
+                        {!hasApiKey && (
+                           <a 
+                             href="https://aistudio.google.com/app/apikey" 
+                             target="_blank" 
+                             rel="noopener noreferrer"
+                             className="w-full flex items-center justify-center space-x-2 py-3 bg-background border border-border rounded-2xl text-xs font-bold hover:border-primary/30 transition-all"
+                           >
+                             <HelpCircle size={14} />
+                             <span>{t('billingLink')}</span>
+                           </a>
                         )}
                       </div>
                     </div>
@@ -158,12 +169,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
 
                 {/* Connectivity Diagnostic */}
                 <div className="space-y-4">
-                  <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Diagnostics</h3>
+                  <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Connectivity Test</h3>
                   <div className="p-5 bg-background/50 border border-border rounded-2xl space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <Zap size={16} className="text-primary" />
-                        <span className="text-xs font-medium">Cloud Latency Check</span>
+                        <span className="text-xs font-medium">Verify AI Response</span>
                       </div>
                       <button 
                         onClick={handleTestKey}
@@ -184,7 +195,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                         {testStatus === 'success' ? <CheckCircle2 size={16} className="shrink-0 mt-0.5" /> : <AlertCircle size={16} className="shrink-0 mt-0.5" />}
                         <div className="flex-1">
                           <p className="text-xs font-bold">{testStatus === 'success' ? t('testSuccess') : t('testError')}</p>
-                          <p className="text-[10px] opacity-80 mt-1">{testStatus === 'success' ? 'Environment is stable. Quota limits and project permissions verified.' : testError}</p>
+                          <p className="text-[10px] opacity-80 mt-1">{testStatus === 'success' ? 'Environment is stable. Project permissions verified.' : testError}</p>
                         </div>
                       </div>
                     )}
@@ -210,13 +221,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, h
                   </div>
                 </div>
 
-                {/* Safety Info */}
+                {/* Privacy Info */}
                 <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl flex items-start space-x-3">
                    <Info size={16} className="text-primary shrink-0 mt-0.5" />
                    <div className="space-y-1">
-                     <p className="text-[10px] text-primary font-bold uppercase tracking-wider">Security & Privacy</p>
+                     <p className="text-[10px] text-primary font-bold uppercase tracking-wider">Privacy & Free Tier</p>
                      <p className="text-[10px] text-primary/80 leading-relaxed">
-                       Pavel AI uses the browser's native API selector. Your key is never stored on our servers and stays exclusively within your session environment.
+                       Pavel AI supports Google AI Studio's free tier. Your key is stored locally in your browser and is never uploaded to any third-party server.
                      </p>
                    </div>
                 </div>

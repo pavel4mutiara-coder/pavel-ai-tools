@@ -5,7 +5,7 @@ import { InputSection } from './InputSection';
 import { BlueprintDisplay } from './BlueprintDisplay';
 import { ProjectBlueprint, AppState, ProjectTemplate } from '../types/index';
 // Added missing Key icon to the lucide-react import list
-import { Github, Settings, LogOut, Moon, Sun, Key, ShieldCheck, Zap, Info, ChevronRight, Sparkles } from 'lucide-react';
+import { Github, Settings, LogOut, Moon, Sun, Key, ShieldCheck, Zap, Info, ChevronRight, Sparkles, HelpCircle } from 'lucide-react';
 import { Logo } from './Logo';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -84,7 +84,7 @@ export default function App() {
     } catch (err: any) {
       setAppState(AppState.ERROR);
       if (err.message?.includes("Requested entity was not found.")) {
-        setError("API Key Error: Please ensure you have selected a valid API key from a paid GCP project.");
+        setError("AI Connection Error: Please re-select your API key in settings. Ensure Gemini API is enabled for your project.");
         setHasApiKey(false);
         setIsSettingsOpen(true);
       } else {
@@ -131,7 +131,7 @@ export default function App() {
           <div className="flex items-center space-x-3">
             <button 
               onClick={() => setIsSettingsOpen(true)}
-              className={`p-2 rounded-full transition-all duration-300 ${!hasApiKey && isAuthenticated ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30 animate-pulse' : 'bg-surface text-gray-500 hover:text-primary border-border'} border`}
+              className={`p-2 rounded-full transition-all duration-300 ${!hasApiKey && isAuthenticated ? 'bg-primary/10 text-primary border-primary/30 animate-pulse' : 'bg-surface text-gray-500 hover:text-primary border-border'} border`}
               title="Workspace Settings"
             >
               <Settings size={18} />
@@ -223,7 +223,7 @@ export default function App() {
                        </div>
                        <div className="flex items-start space-x-4 p-4 bg-background/50 border border-border rounded-2xl">
                           <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">2</div>
-                          <p className="text-xs text-gray-500 font-medium pt-2">{t('apiStep2')}</p>
+                          <p className="text-xs text-gray-500 font-medium pt-2">{t('apiStep3')}</p>
                        </div>
                     </div>
 
@@ -236,9 +236,9 @@ export default function App() {
                         <ChevronRight size={18} />
                       </button>
                       <div className="flex justify-center items-center space-x-2">
-                        <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-[10px] text-gray-400 hover:text-primary transition-colors flex items-center space-x-1 uppercase tracking-widest font-bold">
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-[10px] text-gray-400 hover:text-primary transition-colors flex items-center space-x-1 uppercase tracking-widest font-bold">
                           <span>{t('billingLink')}</span>
-                          <Info size={10} />
+                          <HelpCircle size={10} />
                         </a>
                       </div>
                     </div>

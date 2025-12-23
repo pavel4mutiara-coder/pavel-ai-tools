@@ -99,19 +99,19 @@ export const translations = {
     github_help: "Need a token? Create one in GitHub Developer Settings with 'repo' scope.",
 
     // API Key & Onboarding
-    apiKeyNeeded: "API Configuration Needed",
-    apiKeyDesc: "To unlock full-fidelity code generation with Gemini 3 Pro, you must link your Google AI Studio project.",
-    openKeySelector: "Open Project Selector",
-    billingLink: "Learn about Billing",
-    apiStep1: "Click the Project Selector button.",
-    apiStep2: "Choose a project from your Google AI Studio account.",
-    apiStep3: "Ensure your project has billing enabled for Gemini 3 models.",
-    apiStatusAuthenticated: "Securely Authenticated",
-    apiStatusPending: "Configuration Required",
-    testConnection: "Test Connection",
-    testing: "Testing...",
-    testSuccess: "Connection Stable",
-    testError: "Connection Refused"
+    apiKeyNeeded: "AI Activation Required",
+    apiKeyDesc: "To start building with Gemini 3, you need to connect your free API key from Google AI Studio.",
+    openKeySelector: "Connect AI Key",
+    billingLink: "Get Free Key",
+    apiStep1: "Click 'Connect AI Key' to open the selector.",
+    apiStep2: "Select any project from your Google account.",
+    apiStep3: "The free tier of Google AI Studio is fully supported!",
+    apiStatusAuthenticated: "AI Connected",
+    apiStatusPending: "Ready for Setup",
+    testConnection: "Test Key",
+    testing: "Verifying...",
+    testSuccess: "AI Link Active",
+    testError: "Verification Failed"
   },
   bn: {
     appName: "পাভেল এআই ওয়ার্কস্পেস",
@@ -209,19 +209,19 @@ export const translations = {
     github_help: "টোকেন প্রয়োজন? গিটহাব ডেভেলপার সেটিংসে 'repo' স্কোপ দিয়ে একটি তৈরি করুন।",
 
     // API Key & Onboarding
-    apiKeyNeeded: "এপিআই কনফিগারেশন প্রয়োজন",
-    apiKeyDesc: "Gemini 3 Pro এর মাধ্যমে উন্নত কোড জেনারেট করতে আপনার Google AI Studio প্রজেক্ট লিঙ্ক করুন।",
-    openKeySelector: "প্রজেক্ট সিলেক্টর খুলুন",
-    billingLink: "বিলিং সম্পর্কে জানুন",
-    apiStep1: "প্রজেক্ট সিলেক্টর বাটনে ক্লিক করুন।",
-    apiStep2: "আপনার গুগল এআই স্টুডিও অ্যাকাউন্ট থেকে একটি প্রজেক্ট বেছে নিন।",
-    apiStep3: "নিশ্চিত করুন যে আপনার প্রজেক্টে বিলিং সক্রিয় আছে।",
-    apiStatusAuthenticated: "নিরাপদভাবে যুক্ত",
-    apiStatusPending: "কনফিগারেশন প্রয়োজন",
-    testConnection: "কানেকশন পরীক্ষা করুন",
-    testing: "পরীক্ষা চলছে...",
-    testSuccess: "কানেকশন ঠিক আছে",
-    testError: "কানেকশন ব্যর্থ"
+    apiKeyNeeded: "এআই অ্যাক্টিভেশন প্রয়োজন",
+    apiKeyDesc: "Gemini 3 ব্যবহার শুরু করতে Google AI Studio থেকে আপনার ফ্রি এপিআই কী কানেক্ট করুন।",
+    openKeySelector: "এআই কী যুক্ত করুন",
+    billingLink: "ফ্রি কী নিন",
+    apiStep1: "এআই কী সিলেক্টর খুলতে বাটনে ক্লিক করুন।",
+    apiStep2: "আপনার গুগল অ্যাকাউন্ট থেকে যেকোনো প্রজেক্ট বেছে নিন।",
+    apiStep3: "গুগল এআই স্টুডিওর ফ্রি টায়ার এখানে সম্পূর্ণ সাপোর্ট করে!",
+    apiStatusAuthenticated: "এআই যুক্ত হয়েছে",
+    apiStatusPending: "সেটআপের জন্য প্রস্তুত",
+    testConnection: "কী পরীক্ষা করুন",
+    testing: "যাচাই হচ্ছে...",
+    testSuccess: "এআই লিঙ্ক সক্রিয়",
+    testError: "যাচাই ব্যর্থ"
   }
 };
 
